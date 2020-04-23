@@ -9,36 +9,34 @@ defmodule Highlander do
   _Note: You can also use Highlander to start a globally unique supervision tree._
 
   ## Usage
+  Simply wrap a child process with `{Highlander, child}`.
 
-  Include in your supervision tree as follow:
+  Before:
+
+  ```
+  children = [
+    child_spec
+  ]
+
+  Supervisor.init(children, strategy: :one_for_one)
+  ```
+
+  After:
 
   ```
   children = [
     {Highlander, child_spec}
   ]
-  ```
 
+  Supervisor.init(children, strategy: :one_for_one)
+  ```
   See the [documentation on Supervisor.child_spec/1](https://hexdocs.pm/elixir/Supervisor.html#module-child_spec-1) for more information.
 
-  _**`child_spec.id` is the key used to determine global uniqueness!**_
+  ## `child_spec.id` is used to determine global uniqueness
 
-  In other words, this will generate one global process:
+  Ensure that `my_child_process.id` has the correct value!
 
-  ```
-  children = [
-    {Highlander, %{id: :one}},
-    {Highlander, %{id: :one}}
-  ]
-  ```
-
-  And this will generate two global processes:
-
-  ```
-  children = [
-    {Highlander, %{id: :one}},
-    {Highlander, %{id: :two}}
-  ]
-  ```
+  ## Globally unique supervisors
 
   You can also have Highlander run a supervisor:
 
