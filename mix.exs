@@ -7,7 +7,10 @@ defmodule Highlander.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package(),
+      name: "Highlander",
+      source_url: "https://github.com/derekkraan/highlander"
     ]
   end
 
@@ -22,6 +25,15 @@ defmodule Highlander.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.21.3", only: [:dev]}
+    ]
+  end
+
+  defp package do
+    [
+      description: "There can only be one! (process in your cluster)",
+      licenses: ["MIT"],
+      maintainers: ["Derek Kraan"],
+      links: %{GitHub: "https://github.com/derekkraan/highlander"}
     ]
   end
 end
