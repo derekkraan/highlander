@@ -1,6 +1,14 @@
 defmodule Highlander do
   @moduledoc """
-  Highlander allows you to run a single process just _once_ in a cluster.
+  Highlander allows you to run a single globally unique process in a cluster.
+
+  Highlander uses erlang's `:global` module to ensure uniqueness, and uses `child_spec.id` as the uniqueness key.
+
+  Highlander will start its child process just once in a cluster. The first Highlander process will start its child, all other Highlander processes will monitor the first process and attempt to take over when it goes down.
+
+  _Note: You can also use Highlander to start a globally unique supervision tree._
+
+  ## Usage
 
   Include in your supervision tree as follow:
 
@@ -10,7 +18,7 @@ defmodule Highlander do
   ]
   ```
 
-  `child_spec.id` is the "key" used to determine global uniqueness.
+  _**`child_spec.id` is the key used to determine global uniqueness!**_
 
   In other words, this will generate one global process:
 
