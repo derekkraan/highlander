@@ -6,4 +6,4 @@ Highlander ensures that your process only runs once in your system. It is based 
 
 The entire library is only about 50 lines of code, and has no additional dependencies.
 
-# [Read the documentation](https://hexdocs.pm/highlander) for usage instructions.
+# [Read the documentation](https://hexdocs.pm/highlander/Highlander.html#content) for usage instructions.
