@@ -12,7 +12,7 @@ defmodule Highlander do
 
   `child_spec.id` is the "key" used to determine global uniqueness.
 
-  In other words, the following will generate one global process:
+  In other words, this will generate one global process:
 
   ```
   children = [
@@ -21,12 +21,20 @@ defmodule Highlander do
   ]
   ```
 
-  The following will generate two global processes:
+  And this will generate two global processes:
 
   ```
   children = [
     {Highlander, %{id: :one}},
     {Highlander, %{id: :two}}
+  ]
+  ```
+
+  You can also have Highlander run a supervisor:
+
+  ```
+  children = [
+    {Highlander, {MySupervisor, arg}},
   ]
   ```
   """
