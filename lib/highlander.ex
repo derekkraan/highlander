@@ -18,6 +18,8 @@ defmodule Highlander do
   ]
   ```
 
+  See the [documentation on Supervisor.child_spec/1](https://hexdocs.pm/elixir/Supervisor.html#module-child_spec-1) for more information.
+
   _**`child_spec.id` is the key used to determine global uniqueness!**_
 
   In other words, this will generate one global process:
