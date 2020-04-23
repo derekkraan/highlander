@@ -72,8 +72,14 @@ defmodule Highlander do
     {:noreply, register(state)}
   end
 
-  defp name(state) do
-    %{child_spec: %{id: global_name}} = state
+  @impl true
+  def terminate(reason, %{pid: pid}) do
+    Supervisor.stop(pid, reason)
+  end
+
+  def terminate(_, _), do: nil
+
+  defp name(%{child_spec: %{id: global_name}}) do
     {__MODULE__, global_name}
   end
 
@@ -99,11 +105,4 @@ defmodule Highlander do
         %{child_spec: state.child_spec, ref: ref}
     end
   end
-
-  @impl true
-  def terminate(reason, %{pid: pid}) do
-    Supervisor.stop(pid, reason)
-  end
-
-  def terminate(_, _), do: nil
 end
