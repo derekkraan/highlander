@@ -34,7 +34,7 @@ defmodule Highlander do
 
   ## `child_spec.id` is used to determine global uniqueness
 
-  Ensure that `my_child_process.id` has the correct value! Check the debug logs if you are unsure what is being used.
+  Ensure that `child_spec.id` has the correct value! Check the debug logs if you are unsure what is being used.
 
   ## Globally unique supervisors
 
