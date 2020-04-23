@@ -34,7 +34,7 @@ defmodule Highlander do
 
   ## `child_spec.id` is used to determine global uniqueness
 
-  Ensure that `my_child_process.id` has the correct value!
+  Ensure that `my_child_process.id` has the correct value! Check the debug logs if you are unsure what is being used.
 
   ## Globally unique supervisors
 
@@ -48,9 +48,12 @@ defmodule Highlander do
   """
 
   use GenServer
+  require Logger
 
   def child_spec(child_child_spec) do
     child_child_spec = Supervisor.child_spec(child_child_spec, [])
+
+    Logger.debug("Starting Highlander with #{inspect(child_child_spec.id)} as uniqueness key")
 
     %{
       id: child_child_spec.id,
