@@ -72,9 +72,14 @@ defmodule Highlander do
     {:noreply, register(state)}
   end
 
+  def handle_info({:EXIT, _pid, :name_conflict}, %{pid: pid} = state) do
+    :ok = Supervisor.stop(pid, :shutdown)
+    {:stop, {:shutdown, :name_conflict}, Map.delete(state, :pid)}
+  end
+
   @impl true
   def terminate(reason, %{pid: pid}) do
-    Supervisor.stop(pid, reason)
+    :ok = Supervisor.stop(pid, reason)
   end
 
   def terminate(_, _), do: nil
@@ -83,8 +88,13 @@ defmodule Highlander do
     {__MODULE__, global_name}
   end
 
+  defp handle_conflict(_name, pid1, pid2) do
+    Process.exit(pid2, :name_conflict)
+    pid1
+  end
+
   defp register(state) do
-    case :global.register_name(name(state), self()) do
+    case :global.register_name(name(state), self(), &handle_conflict/3) do
       :yes -> start(state)
       :no -> monitor(state)
     end
@@ -92,7 +102,7 @@ defmodule Highlander do
 
   defp start(state) do
     {:ok, pid} = Supervisor.start_link([state.child_spec], strategy: :one_for_one)
-    %{child_spec: state.child_spec, pid: pid}
+    Map.put(state, :pid, pid)
   end
 
   defp monitor(state) do

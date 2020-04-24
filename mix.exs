@@ -10,7 +10,8 @@ defmodule Highlander.MixProject do
       deps: deps(),
       package: package(),
       name: "Highlander",
-      source_url: "https://github.com/derekkraan/highlander"
+      source_url: "https://github.com/derekkraan/highlander",
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -24,7 +25,9 @@ defmodule Highlander.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.21.3", only: [:dev]}
+      {:ex_doc, "~> 0.21.3", only: :dev},
+      {:local_cluster, "~> 1.1", only: :test},
+      {:schism, "~> 1.0.1", only: :test}
     ]
   end
 
@@ -36,4 +39,7 @@ defmodule Highlander.MixProject do
       links: %{GitHub: "https://github.com/derekkraan/highlander"}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end
