@@ -45,6 +45,25 @@ defmodule Highlander do
     {Highlander, {MySupervisor, arg}},
   ]
   ```
+
+  ## Handling netsplits
+
+  If there is a netsplit in your cluster, then Highlander will think that the other process has died, and start a new one. When the split heals, `:global` will recognize that there is a naming conflict, and will take action to rectify that. To deal with this, Highlander simply terminates one of the two child processes with reason `:shutdown`.
+
+  To catch this, simply trap exits in your process and add a `terminate/2` callback.
+
+  Note: The `terminate/2` callback will also run when your application is terminating.
+
+  ```
+  def init(arg) do
+    Process.flag(:trap_exit, true)
+    {:ok, initial_state(arg)}
+  end
+
+  def terminate(_reason, _state) do
+    # this will run when the process receives an exit signal from its parent
+  end
+  ```
   """
 
   use GenServer
