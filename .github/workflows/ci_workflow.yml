@@ -1,0 +1,50 @@
+name: CI / Automated testing
+on:
+  push:
+    # run every branch
+    branches:
+      - "**"
+  # allow manual build triggering
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Elixir ${{matrix.elixir}} (OTP ${{matrix.otp}})
+    strategy:
+      matrix:
+        otp: [22.x]
+        elixir: [1.9.x, 1.12.x]
+        include:
+          - otp: 24.x
+            elixir: 1.12.x
+    env:
+      MIX_ENV: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: erlef/setup-elixir@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            deps
+            _build
+          key: cache-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            cache-${{ matrix.otp }}-${{ matrix.elixir }}-
+      - name: Display build environment
+        run: printenv
+      - name: Install dependencies
+        run: mix do local.hex --force, local.rebar --force, deps.get
+      - name: Check code formatting
+        run: mix format --check-formatted
+      - name: Compile code (warnings as errors)
+        run: mix compile --warnings-as-errors
+      - name: Run tests (with coverage)
+        run: mix test --cover
+      - name: Create docs
+        run: mix docs

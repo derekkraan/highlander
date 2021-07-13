@@ -64,6 +64,13 @@ defmodule Highlander do
     # this will run when the process receives an exit signal from its parent
   end
   ```
+
+  ## Finding your process' PID
+
+  Your process is registered under a globally unique supervisor name, like `{Highlander, MyServer}`. In order to send a message to your server however, you need to find the PID of the server itself, not the wrapping `Highlander` process. You can do so as follows:
+
+      highlander_pid = :global.whereis_name({Highlander, MyServer})
+      my_actual_server_pid = GenServer.call(highlander_pid, :get_pid)
   """
 
   use GenServer
@@ -94,6 +101,11 @@ defmodule Highlander do
   def handle_info({:EXIT, _pid, :name_conflict}, %{pid: pid} = state) do
     :ok = Supervisor.stop(pid, :shutdown)
     {:stop, {:shutdown, :name_conflict}, Map.delete(state, :pid)}
+  end
+
+  @impl true
+  def handle_call(:get_pid, _from, state) do
+    {:reply, state.pid, state}
   end
 
   @impl true

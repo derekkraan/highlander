@@ -119,4 +119,17 @@ defmodule HighlanderTest do
 
     assert_receive(:hello)
   end
+
+  test "handle_call(:get_pid, _, _) returns child process pid" do
+    test_pid = self()
+
+    Supervisor.start_link(
+      [{Highlander, {Task, fn -> Process.sleep(1000) end}}],
+      strategy: :one_for_one
+    )
+
+    supervisor_pid = :global.whereis_name({Highlander, Task})
+    pid = GenServer.call(supervisor_pid, :get_pid)
+    assert pid != test_pid
+  end
 end
