@@ -25,7 +25,7 @@ defmodule Highlander.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.21", only: [:dev, :test], runtime: false},
       {:local_cluster, "~> 1.1", only: :test},
       {:schism, "~> 1.0.1", only: :test}
     ]
