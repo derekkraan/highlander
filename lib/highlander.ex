@@ -105,7 +105,15 @@ defmodule Highlander do
 
   @impl true
   def handle_call(:get_pid, _from, state) do
-    {:reply, state.pid, state}
+    pid =
+      state.pid
+      |> Supervisor.which_children()
+      |> case do
+        [{_, pid, _, _}] when pid not in [:restarting, :undefined] -> pid
+        _ -> nil
+      end
+
+    {:reply, pid, state}
   end
 
   @impl true
