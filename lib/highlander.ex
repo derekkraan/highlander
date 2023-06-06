@@ -96,6 +96,10 @@ defmodule Highlander do
     {:stop, {:shutdown, :name_conflict}, Map.delete(state, :pid)}
   end
 
+  def handle_info({:EXIT, pid, reason}, %{pid: pid} = state) do
+    {:stop, reason, Map.delete(state, :pid)}
+  end
+
   @impl true
   def terminate(reason, %{pid: pid}) do
     :ok = Supervisor.stop(pid, reason)
