@@ -102,6 +102,42 @@ defmodule HighlanderTest do
     refute_receive(:hello)
   end
 
+  test "do not crash when child process exited" do
+    test_pid = self()
+
+    child_spec = %{
+      id: :one,
+      start:
+        {Agent, :start_link,
+         [
+           fn ->
+             send(test_pid, :hello)
+           end
+         ]},
+      restart: :transient
+    }
+
+    {:ok, _} =
+      Supervisor.start_link(
+        [
+          {Highlander, child_spec}
+        ],
+        strategy: :one_for_one
+      )
+
+    assert_receive(:hello)
+
+    highlander_pid = :global.whereis_name({Highlander, :one})
+    assert highlander_pid != :undefined
+    ref = Process.monitor(highlander_pid)
+    %{pid: pid} = :sys.get_state(highlander_pid)
+
+    Supervisor.stop(pid, {:shutdown, :test})
+
+    assert_receive({:DOWN, ref, :process, highlander_pid, {:shutdown, :test}})
+    assert_receive(:hello)
+  end
+
   test "accepts {module, arg} child_child_spec" do
     test_pid = self()
 
