@@ -11,7 +11,7 @@ _Note: You can also use Highlander to start a globally unique supervision tree._
 
 ## HighlanderPG
 
-Highlander has a sister library called [HighlanderPG](https://hex.codecodeship.com/package/highlander_pg), which is backed by Postgres advisory locks. If you need better guarantees of uniqueness or can not use erlang clustering (eg, in Heroku) then this library can be a good alternative.
+Highlander has a sister library called [HighlanderPG](https://github.com/derekkraan/highlander_pg), which is backed by Postgres advisory locks. If you need better guarantees of uniqueness or can not use erlang clustering (eg, in Heroku) then this library can be a good alternative.
 
 Subscriptions to HighlanderPG support its maintenance and further development.
 
