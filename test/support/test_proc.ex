@@ -1,6 +1,5 @@
 defmodule TestProc do
   use GenServer
-  require Logger
 
   def child_spec(test_pid) do
     %{id: 1, start: {GenServer, :start_link, [__MODULE__, test_pid, []]}}
