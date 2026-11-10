@@ -35,6 +35,13 @@ defmodule Highlander do
     {:stop, {:shutdown, :name_conflict}, Map.delete(state, :pid)}
   end
 
+  # A process that is monitoring another owner has no `:pid` in its state.
+  # Ignore the signal so it doesn't raise a `FunctionClauseError`, which would
+  # crash the process and force a supervisor restart.
+  def handle_info({:EXIT, _pid, :name_conflict}, state) do
+    {:noreply, state}
+  end
+
   @impl true
   def terminate(reason, %{pid: pid}) do
     :ok = Supervisor.stop(pid, reason)
