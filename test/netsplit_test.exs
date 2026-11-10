@@ -40,7 +40,7 @@ defmodule NetsplitTest do
 
     Schism.heal(nodes)
 
-    assert_receive({:goodbye_from, losing_pid}, 1500)
+    assert_receive({:goodbye_from, _losing_pid}, 1500)
     refute_receive({:goodbye_from, _winning_pid}, 500)
 
     pids_alive =
@@ -77,7 +77,7 @@ defmodule NetsplitTest do
 
     Schism.heal(nodes)
 
-    assert_receive({:goodbye_from, losing_pid}, 1500)
+    assert_receive({:goodbye_from, _losing_pid}, 1500)
     refute_receive({:goodbye_from, _winning_pid}, 500)
 
     pids_alive =
